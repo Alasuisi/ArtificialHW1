@@ -48,8 +48,9 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException, IOException, Exception{
     	
-        //Input file must be specified in args[1]
-        BufferedReader reader = new BufferedReader(new FileReader(new File("C:/Users/diego/Desktop/homeresult/map.txt")));
+        //Input file must be specified in args[1] "C:/Users/diego/Desktop/homeresult/map.txt"
+        //BufferedReader reader = new BufferedReader(new FileReader(new File(args[0])));
+    	BufferedReader reader = new BufferedReader(new FileReader(new File(args[0])));
         
         searchAlgorithms.add(new DepthFirstSearch(new GraphSearch()));
         searchAlgorithms.add(new AStarSearch(new GraphSearch(),new ManattanHeuristic()));
@@ -60,7 +61,11 @@ public class Main {
         // so if v = 0 then m = 2^0 = 1 and the grid resolution is 16x16
         // if v = 1 then m = 2^1 = 2 and the grid resolution is 32x32
         //and so on...
-        int v = 1; 
+        
+        
+        int v = Integer.parseInt(args[2]); 
+        //int v = 0;
+        
         int m = (int) pow(2,v);
         System.out.println("M: " + m);
         
@@ -112,8 +117,9 @@ public class Main {
 
         
 	//Store the occupancy matrix in a bitmap image
-
-        new BMP().saveBMP("C:/Users/diego/Desktop/homeresult/img.bmp",occupancy);
+        String name =v+"occupancy.bmp";
+        new BMP().saveBMP(args[1]+name,occupancy);
+        //new BMP().saveBMP("C:/Users/diego/Desktop/diocane/img.bmp",occupancy);
         
         for(int k=0;k<searchAlgorithms.size();k++){
         //Use AIMA framework to solve the problem
@@ -181,12 +187,19 @@ public class Main {
 		
 		//Creating filename
 		String algoName=searchAlgorithms.get(k).getClass().getSimpleName();
-		new BMP().saveBMP("C:/Users/diego/Desktop/homeresult/"+algoName+".bmp",occupancy);
+		System.out.println("ANNAGGIA IL PARADISO    "+args[1]+algoName+".bmp");
+		
+		
+		new BMP().saveBMP(args[1]+algoName+".bmp",occupancy);
+		//new BMP().saveBMP("C:/Users/diego/Desktop/diocane/"+algoName+".bmp",occupancy);
 		
 		//Resizing the image for better visibility (not very efficient approach but it worsk fine)
 		BufferedImage img2 = null;
-		img2=ImageIO.read(new File("C:/Users/diego/Desktop/homeresult/"+algoName+".bmp"));
-		ImageIO.write(scale(img2,v*800,v*800),"bmp" , new File("C:/Users/diego/Desktop/homeresult/scaled-"+algoName+".bmp"));
+		img2=ImageIO.read(new File(args[1]+algoName+".bmp"));
+		ImageIO.write(scale(img2,800,800),"bmp" , new File(args[1]+"scaled-"+algoName+".bmp"));
+		//img2=ImageIO.read(new File("C:/Users/diego/Desktop/diocane/"+algoName+".bmp"));
+		//ImageIO.write(scale(img2,800,800),"bmp" , new File("C:/Users/diego/Desktop/diocane/scaled-"+algoName+".bmp"));
+		
 		printActions(agent.getActions());
 		
 		//Cleaning the slate form previously colored position, so that the next iteration wont be dirty
